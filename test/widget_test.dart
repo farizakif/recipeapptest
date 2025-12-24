@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:recipeapptest/app.dart';
+import 'package:recipeapptest/main.dart';
 
 void main() {
   testWidgets('Recipe app smoke test', (WidgetTester tester) async {

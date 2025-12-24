@@ -1,35 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../data/models/recipe.dart';
 
 /// Recipe Card Widget
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
   final VoidCallback onTap;
+  final int index;
 
   const RecipeCard({
     super.key,
     required this.recipe,
     required this.onTap,
+    this.index = 0,
   });
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Card(
       clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Recipe Image
-            Container(
-              height: 150,
-              width: double.infinity,
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: Icon(
-                Icons.restaurant_menu,
-                size: 64,
-                color: Theme.of(context).colorScheme.primary,
+            // Recipe Image with Gradient Overlay
+            Expanded(
+              flex: 3,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primary.withOpacity(0.8),
+                          colorScheme.secondary.withOpacity(0.6),
+                        ],
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.restaurant_menu,
+                      size: 64,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+                  // Heart Icon
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.favorite_border,
+                        size: 18,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             
@@ -38,52 +85,59 @@ class RecipeCard extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   // Recipe Title
                   Text(
                     recipe.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   
-                  // Recipe Type Chip
-                  Chip(
-                    label: Text(
-                      recipe.recipeType,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  // Chef Info
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.person_outline,
+                        size: 12,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          'By: Chef Emma Brown',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                            fontSize: 11,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   
                   // Ingredients and Steps Count
                   Row(
                     children: [
-                      Icon(
-                        Icons.list,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.secondary,
+                      _buildInfoChip(
+                        context,
+                        Icons.shopping_basket_outlined,
+                        '${recipe.ingredients.length}',
+                        colorScheme.tertiary,
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${recipe.ingredients.length} ingredients',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(width: 12),
-                      Icon(
+                      const SizedBox(width: 6),
+                      _buildInfoChip(
+                        context,
                         Icons.format_list_numbered,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${recipe.steps.length} steps',
-                        style: Theme.of(context).textTheme.bodySmall,
+                        '${recipe.steps.length}',
+                        colorScheme.secondary,
                       ),
                     ],
                   ),
@@ -92,6 +146,39 @@ class RecipeCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    )
+        .animate()
+        .fadeIn(duration: 300.ms, delay: (index * 50).ms)
+        .slideY(begin: 0.1, end: 0, duration: 300.ms, delay: (index * 50).ms);
+  }
+
+  Widget _buildInfoChip(
+    BuildContext context,
+    IconData icon,
+    String text,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: color),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -43,8 +43,7 @@ A complete Flutter Recipe Application built with clean architecture, BLoC state 
 
 ```
 lib/
-├── main.dart                          # App entry point
-├── app.dart                           # Main app widget
+├── main.dart                          # App entry point and main app widget
 ├── core/                              # Core utilities
 │   ├── constants/app_constants.dart
 │   ├── theme/app_theme.dart
