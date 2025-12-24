@@ -1,12 +1,14 @@
 # Recipe App - Flutter Application
 
-A Flutter Recipe Application.
+A cross‑platform Flutter app to create, browse, edit, and manage recipes with categories, ingredients, and step‑by‑step instructions. 
+
+Uses BLoC for state management and SQLite for local persistence.
 
 ## Features
 
 - Create, read, update, and delete recipes
 - Filter recipes by type (Breakfast, Lunch, Dinner, Dessert, etc.)
-- Add ingredients and steps dynamically
+- Add/Delete ingredients and steps dynamically
 - SQLite database for offline data persistence
 - Works on all screen sizes and orientations
 - Pre-populated with 5 sample recipes
