@@ -169,7 +169,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   ),
                 ),
                 Text(
-                  'Housewife',
+                  'Welcome Back!',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.grey[600],
                   ),
