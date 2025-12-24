@@ -1,0 +1,16 @@
+{
+  "recipeTypes": [
+    "Breakfast",
+    "Lunch",
+    "Dinner",
+    "Dessert",
+    "Snack",
+    "Appetizer",
+    "Soup",
+    "Salad",
+    "Beverage",
+    "Vegetarian",
+    "Vegan",
+    "Gluten-Free"
+  ]
+}
