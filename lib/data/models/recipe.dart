@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
-/// Recipe Model
 class Recipe extends Equatable {
   final int? id;
   final String title;
@@ -19,7 +18,6 @@ class Recipe extends Equatable {
     required this.steps,
   });
 
-  /// Create Recipe from JSON (SQLite)
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
       id: json['id'] as int?,
@@ -35,7 +33,6 @@ class Recipe extends Equatable {
     );
   }
 
-  /// Convert Recipe to JSON for SQLite
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -47,7 +44,6 @@ class Recipe extends Equatable {
     };
   }
 
-  /// Copy with method for updates
   Recipe copyWith({
     int? id,
     String? title,

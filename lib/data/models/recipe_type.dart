@@ -1,4 +1,3 @@
-/// Recipe Type Model
 class RecipeType {
   final String name;
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/json_helper.dart';
 
-/// Recipe Type Dropdown Widget with Future.builder
 class RecipeTypeDropdown extends StatelessWidget {
   final String? selectedType;
   final ValueChanged<String?> onChanged;
@@ -52,9 +51,8 @@ class RecipeTypeDropdown extends StatelessWidget {
         return DropdownButtonFormField<String>(
           value: selectedType,
           decoration: InputDecoration(
-            labelText: 'Recipe Type',
             hintText: 'Select a recipe type',
-            prefixIcon: Icon(Icons.category, color: colorScheme.primary),
+            prefixIcon: Icon(Icons.food_bank_rounded, color: colorScheme.primary),
           ),
           items: recipeTypes.map((String type) {
             return DropdownMenuItem<String>(

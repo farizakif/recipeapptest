@@ -1,14 +1,12 @@
 import '../models/recipe.dart';
 import '../local/sqlite_helper.dart';
 
-/// Recipe Repository - handles data operations
 class RecipeRepository {
   final SQLiteHelper _dbHelper;
 
   RecipeRepository({SQLiteHelper? dbHelper})
       : _dbHelper = dbHelper ?? SQLiteHelper.instance;
 
-  /// Get all recipes
   Future<List<Recipe>> getAllRecipes() async {
     try {
       return await _dbHelper.getRecipes();
@@ -17,7 +15,6 @@ class RecipeRepository {
     }
   }
 
-  /// Get recipes by type
   Future<List<Recipe>> getRecipesByType(String type) async {
     try {
       if (type.isEmpty || type == 'All') {
@@ -29,7 +26,6 @@ class RecipeRepository {
     }
   }
 
-  /// Add a new recipe
   Future<int> addRecipe(Recipe recipe) async {
     try {
       return await _dbHelper.insertRecipe(recipe);
@@ -38,7 +34,6 @@ class RecipeRepository {
     }
   }
 
-  /// Update an existing recipe
   Future<int> updateRecipe(Recipe recipe) async {
     try {
       if (recipe.id == null) {
@@ -50,7 +45,6 @@ class RecipeRepository {
     }
   }
 
-  /// Delete a recipe
   Future<int> deleteRecipe(int id) async {
     try {
       return await _dbHelper.deleteRecipe(id);

@@ -9,7 +9,6 @@ import '../widgets/recipe_card.dart';
 import 'recipe_detail_page.dart';
 import 'recipe_form_page.dart';
 
-/// Recipe List Page - displays all recipes
 class RecipeListPage extends StatefulWidget {
   const RecipeListPage({super.key});
 
@@ -223,23 +222,6 @@ class _RecipeListPageState extends State<RecipeListPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'New Update 1.4',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'What Do You Want\nTo Cook Today?',
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              height: 1.2,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -266,70 +248,65 @@ class _RecipeListPageState extends State<RecipeListPage> {
   }
 
   Widget _buildCategories(BuildContext context, ColorScheme colorScheme) {
-    return FutureBuilder<List<String>>(
-      future: JsonHelper.loadRecipeTypes(),
-      builder: (context, snapshot) {
-        final categories = snapshot.data ?? [];
-        final categoryIcons = {
-          'Western': Icons.lunch_dining,
-          'Bread': Icons.bakery_dining,
-          'Soup': Icons.soup_kitchen,
-          'Dessert': Icons.cake,
-          'Cocktail': Icons.local_bar,
-          'Noodles': Icons.ramen_dining,
-          'Coffee': Icons.coffee,
-        };
+    final categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks', 'Drinks'];
+    final categoryIcons = {
+      'All': Icons.grid_view,
+      'Breakfast': Icons.free_breakfast,
+      'Lunch': Icons.lunch_dining,
+      'Dinner': Icons.dinner_dining,
+      'Dessert': Icons.cake,
+      'Snacks': Icons.fastfood,
+      'Drinks': Icons.local_cafe,
+    };
 
-        return SizedBox(
-          height: 120,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              final category = categories[index];
-              final isSelected = _selectedCategory == category;
-              return GestureDetector(
-                onTap: () => _filterRecipes(category),
-                child: Container(
-                  width: 80,
-                  margin: const EdgeInsets.only(right: 16),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? colorScheme.primary
-                              : colorScheme.surfaceContainerHighest,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          categoryIcons[category] ?? Icons.restaurant_menu,
-                          color: isSelected ? Colors.white : colorScheme.onSurface,
-                          size: 30,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        category,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                          color: isSelected ? colorScheme.primary : Colors.grey[600],
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          final isSelected = _selectedCategory == category;
+          return GestureDetector(
+            onTap: () => _filterRecipes(category),
+            child: Container(
+              width: 80,
+              margin: const EdgeInsets.only(right: 16),
+              child: Column(
+                children: [
+                  Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? colorScheme.primary
+                          : colorScheme.surfaceContainerHighest,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      categoryIcons[category] ?? Icons.restaurant_menu,
+                      color: isSelected ? Colors.white : colorScheme.onSurface,
+                      size: 30,
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        );
-      },
+                  const SizedBox(height: 8),
+                  Text(
+                    category,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      color: isSelected ? colorScheme.primary : Colors.grey[600],
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 

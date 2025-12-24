@@ -6,7 +6,6 @@ import '../../bloc/recipe/recipe_event.dart';
 import '../../data/models/recipe.dart';
 import '../widgets/recipe_type_dropdown.dart';
 
-/// Recipe Form Page - Add/Edit Recipe
 class RecipeFormPage extends StatefulWidget {
   final Recipe? recipe;
 
@@ -98,7 +97,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
         id: widget.recipe?.id,
         title: _titleController.text.trim(),
         recipeType: _selectedType!,
-        imagePath: 'assets/default_recipe.png',
+        imagePath: '',
         ingredients: _ingredients,
         steps: _steps,
       );
@@ -161,7 +160,6 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
             TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'Recipe Title',
                 hintText: 'Enter a delicious recipe name',
                 prefixIcon: Icon(Icons.restaurant_menu, color: colorScheme.primary),
               ),
@@ -273,10 +271,6 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                       controller: _stepController,
                       decoration: InputDecoration(
                         hintText: 'Describe a step...',
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom: 40),
-                          child: Icon(Icons.format_list_numbered, color: colorScheme.secondary),
-                        ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -314,7 +308,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
             // Save Button
             ElevatedButton.icon(
               onPressed: _saveRecipe,
-              icon: const Icon(Icons.save),
+              icon: const Icon(Icons.save_alt_rounded),
               label: Text(_isEditing ? 'Update Recipe' : 'Create Recipe'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 18),

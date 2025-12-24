@@ -3,16 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/recipe/recipe_bloc.dart';
 import 'core/theme/app_theme.dart';
 import 'data/repositories/recipe_repository.dart';
-import 'presentation/pages/recipe_list_page.dart';
+import 'presentation/screen/recipe_list_page.dart';
 
 void main() {
-  // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
   
   runApp(const RecipeApp());
 }
 
-/// Main App Widget
 class RecipeApp extends StatelessWidget {
   const RecipeApp({super.key});
 

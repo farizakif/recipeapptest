@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../data/models/recipe.dart';
 
-/// Recipe Events
 abstract class RecipeEvent extends Equatable {
   const RecipeEvent();
 
@@ -9,12 +8,10 @@ abstract class RecipeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Load all recipes
 class LoadRecipes extends RecipeEvent {
   const LoadRecipes();
 }
 
-/// Filter recipes by type
 class FilterRecipesByType extends RecipeEvent {
   final String recipeType;
 
@@ -24,7 +21,6 @@ class FilterRecipesByType extends RecipeEvent {
   List<Object?> get props => [recipeType];
 }
 
-/// Add a new recipe
 class AddRecipe extends RecipeEvent {
   final Recipe recipe;
 
@@ -34,7 +30,6 @@ class AddRecipe extends RecipeEvent {
   List<Object?> get props => [recipe];
 }
 
-/// Update an existing recipe
 class UpdateRecipe extends RecipeEvent {
   final Recipe recipe;
 
@@ -44,7 +39,6 @@ class UpdateRecipe extends RecipeEvent {
   List<Object?> get props => [recipe];
 }
 
-/// Delete a recipe
 class DeleteRecipe extends RecipeEvent {
   final int recipeId;
 

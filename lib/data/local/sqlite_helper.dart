@@ -3,21 +3,18 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/recipe.dart';
 
-/// SQLite Database Helper
 class SQLiteHelper {
   static final SQLiteHelper instance = SQLiteHelper._internal();
   static Database? _database;
 
   SQLiteHelper._internal();
 
-  /// Get database instance
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  /// Initialize database
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'recipes.db');
@@ -29,7 +26,6 @@ class SQLiteHelper {
     );
   }
 
-  /// Create tables
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE recipes(
@@ -42,17 +38,15 @@ class SQLiteHelper {
       )
     ''');
 
-    // Insert sample recipes
     await _insertSampleRecipes(db);
   }
 
-  /// Insert sample recipes on first launch
   Future<void> _insertSampleRecipes(Database db) async {
     final sampleRecipes = [
       Recipe(
         title: 'Classic Pancakes',
         recipeType: 'Breakfast',
-        imagePath: 'assets/default_recipe.png',
+        imagePath: '',
         ingredients: [
           '2 cups all-purpose flour',
           '2 tablespoons sugar',
@@ -74,7 +68,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Caesar Salad',
         recipeType: 'Lunch',
-        imagePath: 'assets/default_recipe.png',
+        imagePath: '',
         ingredients: [
           '1 head romaine lettuce',
           '1/2 cup Caesar dressing',
@@ -94,7 +88,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Spaghetti Carbonara',
         recipeType: 'Dinner',
-        imagePath: 'assets/default_recipe.png',
+        imagePath: '',
         ingredients: [
           '400g spaghetti',
           '200g pancetta or bacon',
@@ -167,20 +161,17 @@ class SQLiteHelper {
     }
   }
 
-  /// Insert a recipe
   Future<int> insertRecipe(Recipe recipe) async {
     final db = await database;
     return await db.insert('recipes', recipe.toJson());
   }
 
-  /// Get all recipes
   Future<List<Recipe>> getRecipes() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('recipes');
     return List.generate(maps.length, (i) => Recipe.fromJson(maps[i]));
   }
 
-  /// Update a recipe
   Future<int> updateRecipe(Recipe recipe) async {
     final db = await database;
     return await db.update(
@@ -191,7 +182,6 @@ class SQLiteHelper {
     );
   }
 
-  /// Delete a recipe
   Future<int> deleteRecipe(int id) async {
     final db = await database;
     return await db.delete(
@@ -201,7 +191,6 @@ class SQLiteHelper {
     );
   }
 
-  /// Get recipes by type
   Future<List<Recipe>> getRecipesByType(String type) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -212,7 +201,11 @@ class SQLiteHelper {
     return List.generate(maps.length, (i) => Recipe.fromJson(maps[i]));
   }
 
-  /// Close database
+  Future<void> clearAllRecipes() async {
+    final db = await database;
+    await db.delete('recipes');
+  }
+
   Future<void> close() async {
     final db = await database;
     await db.close();

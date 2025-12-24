@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// App Theme Configuration
 class AppTheme {
   static ThemeData get lightTheme {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFFFF8C42), // Warm orange
+      seedColor: const Color(0xFFFF8C42),
       brightness: Brightness.light,
-      primary: const Color(0xFFFF8C42), // Warm orange
-      secondary: const Color(0xFFFFB84D), // Warm yellow-orange
-      tertiary: const Color(0xFFFFD93D), // Warm yellow
-      surface: const Color(0xFFFFFBF5), // Warm off-white
-      onSurface: const Color(0xFF2D2D2D), // Soft dark gray
-      surfaceContainerHighest: const Color(0xFFFFF5E6), // Warm cream
-      primaryContainer: const Color(0xFFFFE5D4), // Light warm orange
-      secondaryContainer: const Color(0xFFFFF0D6), // Light warm yellow
+      primary: const Color(0xFFFF8C42),
+      secondary: const Color(0xFFFFB84D),
+      tertiary: const Color(0xFFFFD93D),
+      surface: const Color(0xFFFFFBF5),
+      onSurface: const Color(0xFF2D2D2D),
+      surfaceContainerHighest: const Color(0xFFFFF5E6),
+      primaryContainer: const Color(0xFFFFE5D4),
+      secondaryContainer: const Color(0xFFFFF0D6),
     );
 
     return ThemeData(

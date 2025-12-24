@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../data/models/recipe.dart';
 
-/// Recipe Card Widget
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
   final VoidCallback onTap;
@@ -29,30 +28,22 @@ class RecipeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Recipe Image with Gradient Overlay
+            // Recipe Image with Gradient Overlay
             Expanded(
               flex: 3,
               child: Stack(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          colorScheme.primary.withOpacity(0.8),
-                          colorScheme.secondary.withOpacity(0.6),
-                        ],
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.restaurant_menu,
-                      size: 64,
-                      color: Colors.white.withOpacity(0.9),
-                    ),
-                  ),
-                  // Heart Icon
+                  recipe.imagePath.isNotEmpty
+                      ? Image.asset(
+                          'assets/${recipe.imagePath}',
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return _buildGradientPlaceholder(colorScheme);
+                          },
+                        )
+                      : _buildGradientPlaceholder(colorScheme),
                   Positioned(
                     top: 12,
                     right: 12,
@@ -87,7 +78,6 @@ class RecipeCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Recipe Title
                   Text(
                     recipe.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -99,7 +89,6 @@ class RecipeCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   
-                  // Chef Info
                   Row(
                     children: [
                       Icon(
@@ -123,7 +112,6 @@ class RecipeCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   
-                  // Ingredients and Steps Count
                   Row(
                     children: [
                       _buildInfoChip(
@@ -179,6 +167,28 @@ class RecipeCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGradientPlaceholder(ColorScheme colorScheme) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary.withOpacity(0.8),
+            colorScheme.secondary.withOpacity(0.6),
+          ],
+        ),
+      ),
+      child: Icon(
+        Icons.restaurant_menu,
+        size: 64,
+        color: Colors.white.withOpacity(0.9),
       ),
     );
   }

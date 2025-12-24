@@ -6,7 +6,6 @@ import '../../bloc/recipe/recipe_event.dart';
 import '../../data/models/recipe.dart';
 import 'recipe_form_page.dart';
 
-/// Recipe Detail Page - displays recipe details
 class RecipeDetailPage extends StatefulWidget {
   final Recipe recipe;
 
@@ -24,7 +23,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -124,8 +123,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
           ),
         ],
       ),
-      body: Column(
-        children: [
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
           // Recipe Image Header
           Container(
             height: 250,
@@ -140,13 +140,29 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                 ],
               ),
             ),
-            child: Center(
-              child: Icon(
-                Icons.restaurant_menu,
-                size: 120,
-                color: Colors.white.withOpacity(0.9),
-              ),
-            ),
+            child: widget.recipe.imagePath.isNotEmpty
+                ? Image.asset(
+                    'assets/${widget.recipe.imagePath}',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Icon(
+                          Icons.restaurant_menu,
+                          size: 120,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      );
+                    },
+                  )
+                : Center(
+                    child: Icon(
+                      Icons.restaurant_menu,
+                      size: 120,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
           ),
           
           // Recipe Info Card
@@ -283,23 +299,23 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
               tabs: const [
                 Tab(text: 'Ingredients'),
                 Tab(text: 'Instructions'),
-                Tab(text: 'Review'),
               ],
             ),
           ),
           
           // Tab Content
-          Expanded(
+          SizedBox(
+            height: 400,
             child: TabBarView(
               controller: _tabController,
               children: [
                 _buildIngredientsTab(context, colorScheme),
                 _buildInstructionsTab(context, colorScheme),
-                _buildReviewTab(context, colorScheme),
               ],
             ),
           ),
         ],
+        ),
       ),
     );
   }
@@ -437,15 +453,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                         height: 1.6,
                       ),
                     ),
-                    if (index == 0) ...[
-                      const SizedBox(height: 12),
-                      _buildBulletPoint('Peel and devein 1 lb of shrimp.'),
-                      _buildBulletPoint('Mince 4 garlic cloves and chop fresh parsley.'),
-                    ],
-                    if (index == 1) ...[
-                      const SizedBox(height: 12),
-                      _buildBulletPoint('In a large skillet, melt 3 tbsp of unsalted butter over medium heat.'),
-                    ],
                   ],
                 ),
               ),
@@ -453,56 +460,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
           ),
         );
       },
-    );
-  }
-
-  Widget _buildBulletPoint(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('• ', style: TextStyle(fontSize: 18)),
-          Expanded(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReviewTab(BuildContext context, ColorScheme colorScheme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.star_border,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No reviews yet',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Be the first to review this recipe!',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
