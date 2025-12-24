@@ -27,8 +27,6 @@ class RecipeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Recipe Image with Gradient Overlay
-            // Recipe Image with Gradient Overlay
             Expanded(
               flex: 3,
               child: Stack(
@@ -40,10 +38,10 @@ class RecipeCard extends StatelessWidget {
                           height: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return _buildGradientPlaceholder(colorScheme);
+                            return buildGradientPlaceholder(colorScheme);
                           },
                         )
-                      : _buildGradientPlaceholder(colorScheme),
+                      : buildGradientPlaceholder(colorScheme),
                   Positioned(
                     top: 12,
                     right: 12,
@@ -71,7 +69,6 @@ class RecipeCard extends StatelessWidget {
               ),
             ),
             
-            // Recipe Details
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -114,14 +111,14 @@ class RecipeCard extends StatelessWidget {
                   
                   Row(
                     children: [
-                      _buildInfoChip(
+                      buildInfoChip(
                         context,
                         Icons.shopping_basket_outlined,
                         '${recipe.ingredients.length}',
                         colorScheme.tertiary,
                       ),
                       const SizedBox(width: 6),
-                      _buildInfoChip(
+                      buildInfoChip(
                         context,
                         Icons.format_list_numbered,
                         '${recipe.steps.length}',
@@ -141,7 +138,7 @@ class RecipeCard extends StatelessWidget {
         .slideY(begin: 0.1, end: 0, duration: 300.ms, delay: (index * 50).ms);
   }
 
-  Widget _buildInfoChip(
+  Widget buildInfoChip(
     BuildContext context,
     IconData icon,
     String text,
@@ -171,7 +168,7 @@ class RecipeCard extends StatelessWidget {
     );
   }
 
-  Widget _buildGradientPlaceholder(ColorScheme colorScheme) {
+  Widget buildGradientPlaceholder(ColorScheme colorScheme) {
     return Container(
       width: double.infinity,
       height: double.infinity,

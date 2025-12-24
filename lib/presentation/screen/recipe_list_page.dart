@@ -4,7 +4,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../bloc/recipe/recipe_bloc.dart';
 import '../../bloc/recipe/recipe_event.dart';
 import '../../bloc/recipe/recipe_state.dart';
-import '../../core/utils/json_helper.dart';
 import '../widgets/recipe_card.dart';
 import 'recipe_detail_page.dart';
 import 'recipe_form_page.dart';
@@ -17,9 +16,9 @@ class RecipeListPage extends StatefulWidget {
 }
 
 class _RecipeListPageState extends State<RecipeListPage> {
-  final TextEditingController _searchController = TextEditingController();
-  String _selectedCategory = 'All';
-  int _currentIndex = 0;
+  final TextEditingController searchController = TextEditingController();
+  String selectedCategory = 'All';
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -29,13 +28,13 @@ class _RecipeListPageState extends State<RecipeListPage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 
   void _filterRecipes(String category) {
     setState(() {
-      _selectedCategory = category;
+      selectedCategory = category;
     });
     
     if (category == 'All') {
@@ -55,52 +54,31 @@ class _RecipeListPageState extends State<RecipeListPage> {
         child: BlocBuilder<RecipeBloc, RecipeState>(
         builder: (context, state) {
           if (state is RecipeLoading) {
-              return _buildShimmerLoading(context);
+              return buildShimmerLoading(context);
           }
           
           if (state is RecipeError) {
-              return _buildErrorState(context, state.message);
+              return buildErrorState(context, state.message);
             }
             
             if (state is RecipeLoaded) {
               if (state.recipes.isEmpty) {
-                return _buildEmptyState(context);
+                return buildEmptyState(context);
               }
               
               return ListView(
                 children: [
-                  // Header Section
-                  _buildHeader(context, colorScheme),
-                  
-                  // Greeting Section
-                  _buildGreetingSection(context, colorScheme),
-                  
-                  // Search Bar
-                  _buildSearchBar(context, colorScheme),
-                  
-                  // Categories
-                  _buildCategories(context, colorScheme),
-                  
-                  // Recommendations Section
-                  _buildSectionHeader(
-                    context,
-                    '${state.recipes.length} Recommendations',
-                    'See More >',
+                  buildHeader(context, colorScheme),
+                  buildGreetingSection(context, colorScheme),
+                  buildSearchBar(context, colorScheme),
+                  buildCategories(context, colorScheme),
+                  buildSectionHeader(context,'${state.recipes.length} Recommendations','See More >',
                     colorScheme,
                   ),
-                  
-                  // Recipe Cards Horizontal
-                  _buildHorizontalRecipeList(context, state.recipes, colorScheme),
-                  
-                  // Breakfast Recipes Section
-                  _buildSectionHeader(
-                    context,
-                    '${state.recipes.length} Breakfast Recipes',
-                    'See More >',
+                  buildHorizontalRecipeList(context, state.recipes, colorScheme),
+                  buildSectionHeader(context,'${state.recipes.length} Breakfast Recipes','See More >',
                     colorScheme,
                   ),
-                  
-                  // Recipe Grid
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: GridView.builder(
@@ -141,7 +119,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
         },
       ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(context, colorScheme),
+      bottomNavigationBar: buildBottomNavigationBar(context, colorScheme),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(
@@ -160,12 +138,11 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, ColorScheme colorScheme) {
+  Widget buildHeader(BuildContext context, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          // Profile Picture
           Container(
             width: 50,
             height: 50,
@@ -200,7 +177,6 @@ class _RecipeListPageState extends State<RecipeListPage> {
               ],
             ),
           ),
-          // Notification Bell
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -217,7 +193,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildGreetingSection(BuildContext context, ColorScheme colorScheme) {
+  Widget buildGreetingSection(BuildContext context, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -226,7 +202,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context, ColorScheme colorScheme) {
+  Widget buildSearchBar(BuildContext context, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
@@ -235,7 +211,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: TextField(
-          controller: _searchController,
+          controller: searchController,
           decoration: InputDecoration(
             hintText: 'Search Recipe',
             prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
@@ -247,7 +223,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildCategories(BuildContext context, ColorScheme colorScheme) {
+  Widget buildCategories(BuildContext context, ColorScheme colorScheme) {
     final categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks', 'Drinks'];
     final categoryIcons = {
       'All': Icons.grid_view,
@@ -267,7 +243,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
         itemCount: categories.length,
         itemBuilder: (context, index) {
           final category = categories[index];
-          final isSelected = _selectedCategory == category;
+          final isSelected = selectedCategory == category;
           return GestureDetector(
             onTap: () => _filterRecipes(category),
             child: Container(
@@ -310,7 +286,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildSectionHeader(
+  Widget buildSectionHeader(
     BuildContext context,
     String title,
     String seeMore,
@@ -342,7 +318,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildHorizontalRecipeList(
+  Widget buildHorizontalRecipeList(
     BuildContext context,
     List recipes,
     ColorScheme colorScheme,
@@ -379,7 +355,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildBottomNavigationBar(BuildContext context, ColorScheme colorScheme) {
+  Widget buildBottomNavigationBar(BuildContext context, ColorScheme colorScheme) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -392,10 +368,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
         ],
       ),
       child: BottomNavigationBar(
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
           setState(() {
-            _currentIndex = index;
+            currentIndex = index;
           });
         },
         type: BottomNavigationBarType.fixed,
@@ -423,7 +399,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildShimmerLoading(BuildContext context) {
+  Widget buildShimmerLoading(BuildContext context) {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -493,7 +469,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, String message) {
+  Widget buildErrorState(BuildContext context, String message) {
     final colorScheme = Theme.of(context).colorScheme;
     
     return Center(
@@ -549,7 +525,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget buildEmptyState(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     
     return Center(

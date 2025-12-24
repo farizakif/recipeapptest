@@ -7,14 +7,14 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
   final RecipeRepository repository;
 
   RecipeBloc({required this.repository}) : super(const RecipeInitial()) {
-    on<LoadRecipes>(_onLoadRecipes);
-    on<FilterRecipesByType>(_onFilterRecipesByType);
-    on<AddRecipe>(_onAddRecipe);
-    on<UpdateRecipe>(_onUpdateRecipe);
-    on<DeleteRecipe>(_onDeleteRecipe);
+    on<LoadRecipes>(onLoadRecipes);
+    on<FilterRecipesByType>(onFilterRecipesByType);
+    on<AddRecipe>(onAddRecipe);
+    on<UpdateRecipe>(onUpdateRecipe);
+    on<DeleteRecipe>(onDeleteRecipe);
   }
 
-  Future<void> _onLoadRecipes(
+  Future<void> onLoadRecipes(
     LoadRecipes event,
     Emitter<RecipeState> emit,
   ) async {
@@ -27,7 +27,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     }
   }
 
-  Future<void> _onFilterRecipesByType(
+  Future<void> onFilterRecipesByType(
     FilterRecipesByType event,
     Emitter<RecipeState> emit,
   ) async {
@@ -40,7 +40,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     }
   }
 
-  Future<void> _onAddRecipe(
+  Future<void> onAddRecipe(
     AddRecipe event,
     Emitter<RecipeState> emit,
   ) async {
@@ -53,7 +53,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     }
   }
 
-  Future<void> _onUpdateRecipe(
+  Future<void> onUpdateRecipe(
     UpdateRecipe event,
     Emitter<RecipeState> emit,
   ) async {
@@ -66,7 +66,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     }
   }
 
-  Future<void> _onDeleteRecipe(
+  Future<void> onDeleteRecipe(
     DeleteRecipe event,
     Emitter<RecipeState> emit,
   ) async {

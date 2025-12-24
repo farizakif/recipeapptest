@@ -38,15 +38,15 @@ class SQLiteHelper {
       )
     ''');
 
-    await _insertSampleRecipes(db);
+    await insertSampleRecipes(db);
   }
 
-  Future<void> _insertSampleRecipes(Database db) async {
+  Future<void> insertSampleRecipes(Database db) async {
     final sampleRecipes = [
       Recipe(
         title: 'Classic Pancakes',
         recipeType: 'Breakfast',
-        imagePath: '',
+        imagePath: 'assets/pancakes.avif',
         ingredients: [
           '2 cups all-purpose flour',
           '2 tablespoons sugar',
@@ -68,13 +68,13 @@ class SQLiteHelper {
       Recipe(
         title: 'Caesar Salad',
         recipeType: 'Lunch',
-        imagePath: '',
+        imagePath: 'assets/caesar.png',
         ingredients: [
           '1 head romaine lettuce',
           '1/2 cup Caesar dressing',
           '1/4 cup parmesan cheese',
           '1 cup croutons',
-          'Black pepper to taste',
+          'Black pepper',
         ],
         steps: [
           'Wash and chop romaine lettuce',
@@ -82,13 +82,13 @@ class SQLiteHelper {
           'Add Caesar dressing and toss well',
           'Top with parmesan cheese and croutons',
           'Add black pepper to taste',
-          'Serve immediately',
+          'Serve & enjoy',
         ],
       ),
       Recipe(
         title: 'Spaghetti Carbonara',
         recipeType: 'Dinner',
-        imagePath: '',
+        imagePath: 'assets/carbonara.webp',
         ingredients: [
           '400g spaghetti',
           '200g pancetta or bacon',
@@ -111,7 +111,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Chocolate Chip Cookies',
         recipeType: 'Dessert',
-        imagePath: 'assets/default_recipe.png',
+        imagePath: 'assets/cookies.avif',
         ingredients: [
           '2 cups flour',
           '1 tsp baking soda',
@@ -137,7 +137,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Veggie Stir Fry',
         recipeType: 'Vegetarian',
-        imagePath: 'assets/default_recipe.png',
+        imagePath: 'assets/veggie.png',
         ingredients: [
           '2 cups mixed vegetables',
           '2 tablespoons soy sauce',

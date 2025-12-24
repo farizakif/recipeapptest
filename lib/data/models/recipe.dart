@@ -24,12 +24,8 @@ class Recipe extends Equatable {
       title: json['title'] as String,
       recipeType: json['recipeType'] as String,
       imagePath: json['imagePath'] as String,
-      ingredients: List<String>.from(
-        jsonDecode(json['ingredients'] as String) as List,
-      ),
-      steps: List<String>.from(
-        jsonDecode(json['steps'] as String) as List,
-      ),
+      ingredients: List<String>.from(jsonDecode(json['ingredients'] as String) as List,),
+      steps: List<String>.from(jsonDecode(json['steps'] as String) as List,),
     );
   }
 

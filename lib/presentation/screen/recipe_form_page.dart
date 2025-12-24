@@ -17,76 +17,76 @@ class RecipeFormPage extends StatefulWidget {
 
 class _RecipeFormPageState extends State<RecipeFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _ingredientController = TextEditingController();
-  final _stepController = TextEditingController();
+  final titleController = TextEditingController();
+  final ingredientController = TextEditingController();
+  final stepController = TextEditingController();
 
-  String? _selectedType;
-  List<String> _ingredients = [];
-  List<String> _steps = [];
+  String? selectedType;
+  List<String> ingredients = [];
+  List<String> steps = [];
 
-  bool get _isEditing => widget.recipe != null;
+  bool get isEditing => widget.recipe != null;
 
   @override
   void initState() {
     super.initState();
     
-    if (_isEditing) {
-      _titleController.text = widget.recipe!.title;
-      _selectedType = widget.recipe!.recipeType;
-      _ingredients = List.from(widget.recipe!.ingredients);
-      _steps = List.from(widget.recipe!.steps);
+    if (isEditing) {
+      titleController.text = widget.recipe!.title;
+      selectedType = widget.recipe!.recipeType;
+      ingredients = List.from(widget.recipe!.ingredients);
+      steps = List.from(widget.recipe!.steps);
     }
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _ingredientController.dispose();
-    _stepController.dispose();
+    titleController.dispose();
+    ingredientController.dispose();
+    stepController.dispose();
     super.dispose();
   }
 
-  void _addIngredient() {
-    if (_ingredientController.text.trim().isNotEmpty) {
+  void addIngredient() {
+    if (ingredientController.text.trim().isNotEmpty) {
       setState(() {
-        _ingredients.add(_ingredientController.text.trim());
-        _ingredientController.clear();
+        ingredients.add(ingredientController.text.trim());
+        ingredientController.clear();
       });
     }
   }
 
-  void _removeIngredient(int index) {
+  void removeIngredient(int index) {
     setState(() {
-      _ingredients.removeAt(index);
+      ingredients.removeAt(index);
     });
   }
 
-  void _addStep() {
-    if (_stepController.text.trim().isNotEmpty) {
+  void addStep() {
+    if (stepController.text.trim().isNotEmpty) {
       setState(() {
-        _steps.add(_stepController.text.trim());
-        _stepController.clear();
+        steps.add(stepController.text.trim());
+        stepController.clear();
       });
     }
   }
 
-  void _removeStep(int index) {
+  void removeStep(int index) {
     setState(() {
-      _steps.removeAt(index);
+      steps.removeAt(index);
     });
   }
 
-  void _saveRecipe() {
+  void saveRecipe() {
     if (_formKey.currentState!.validate()) {
-      if (_ingredients.isEmpty) {
+      if (ingredients.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please add at least one ingredient')),
         );
         return;
       }
       
-      if (_steps.isEmpty) {
+      if (steps.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please add at least one step')),
         );
@@ -95,14 +95,14 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
 
       final recipe = Recipe(
         id: widget.recipe?.id,
-        title: _titleController.text.trim(),
-        recipeType: _selectedType!,
+        title: titleController.text.trim(),
+        recipeType: selectedType!,
         imagePath: '',
-        ingredients: _ingredients,
-        steps: _steps,
+        ingredients: ingredients,
+        steps: steps,
       );
 
-      if (_isEditing) {
+      if (isEditing) {
         context.read<RecipeBloc>().add(UpdateRecipe(recipe));
       } else {
         context.read<RecipeBloc>().add(AddRecipe(recipe));
@@ -128,20 +128,20 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                _isEditing ? Icons.edit : Icons.add,
+                isEditing ? Icons.edit : Icons.add,
                 color: colorScheme.primary,
                 size: 20,
               ),
             ),
             const SizedBox(width: 12),
-            Text(_isEditing ? 'Edit Recipe' : 'Create Recipe'),
+            Text(isEditing ? 'Edit Recipe' : 'Create Recipe'),
           ],
         ),
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 8),
             child: ElevatedButton.icon(
-              onPressed: _saveRecipe,
+              onPressed: saveRecipe,
               icon: const Icon(Icons.check, size: 20),
               label: const Text('Save'),
               style: ElevatedButton.styleFrom(
@@ -156,9 +156,8 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            // Title Field
             TextFormField(
-              controller: _titleController,
+              controller: titleController,
               decoration: InputDecoration(
                 hintText: 'Enter a delicious recipe name',
                 prefixIcon: Icon(Icons.restaurant_menu, color: colorScheme.primary),
@@ -176,12 +175,11 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 .slideY(begin: -0.1, end: 0, duration: 300.ms),
             const SizedBox(height: 20),
 
-            // Recipe Type Dropdown
             RecipeTypeDropdown(
-              selectedType: _selectedType,
+              selectedType: selectedType,
               onChanged: (value) {
                 setState(() {
-                  _selectedType = value;
+                  selectedType = value;
                 });
               },
             )
@@ -191,7 +189,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
             const SizedBox(height: 32),
 
             // Ingredients Section
-            _buildSectionHeader(
+            buildSectionHeader(
               context,
               'Ingredients',
               Icons.shopping_basket_outlined,
@@ -210,7 +208,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _ingredientController,
+                      controller: ingredientController,
                       decoration: InputDecoration(
                         hintText: 'Add an ingredient...',
                         prefixIcon: Icon(Icons.add_shopping_cart, color: colorScheme.tertiary),
@@ -220,13 +218,13 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                           vertical: 16,
                         ),
                       ),
-                      onSubmitted: (_) => _addIngredient(),
+                      onSubmitted: (_) => addIngredient(),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(right: 8),
                     child: IconButton(
-                      onPressed: _addIngredient,
+                      onPressed: addIngredient,
                       icon: Icon(Icons.add_circle, color: colorScheme.tertiary),
                       tooltip: 'Add ingredient',
                     ),
@@ -238,9 +236,9 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 .fadeIn(duration: 300.ms, delay: 100.ms)
                 .slideY(begin: -0.1, end: 0, duration: 300.ms, delay: 100.ms),
             const SizedBox(height: 12),
-            if (_ingredients.isNotEmpty)
-              ...List.generate(_ingredients.length, (index) {
-                return _buildIngredientChip(context, _ingredients[index], index)
+            if (ingredients.isNotEmpty)
+              ...List.generate(ingredients.length, (index) {
+                return buildIngredientChip(context, ingredients[index], index)
                     .animate()
                     .fadeIn(duration: 200.ms, delay: (index * 30).ms)
                     .slideX(begin: -0.1, end: 0, duration: 200.ms, delay: (index * 30).ms);
@@ -248,9 +246,8 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
             const SizedBox(height: 32),
 
             // Steps Section
-            _buildSectionHeader(
-              context,
-              'Instructions',
+            buildSectionHeader(
+              context,'Instructions',
               Icons.format_list_numbered,
               colorScheme.secondary,
             ),
@@ -268,7 +265,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _stepController,
+                      controller: stepController,
                       decoration: InputDecoration(
                         hintText: 'Describe a step...',
                         border: InputBorder.none,
@@ -278,13 +275,13 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                         ),
                       ),
                       maxLines: 2,
-                      onSubmitted: (_) => _addStep(),
+                      onSubmitted: (_) => addStep(),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(right: 8, top: 8),
                     child: IconButton(
-                      onPressed: _addStep,
+                      onPressed: addStep,
                       icon: Icon(Icons.add_circle, color: colorScheme.secondary),
                       tooltip: 'Add step',
                     ),
@@ -296,9 +293,9 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 .fadeIn(duration: 300.ms, delay: 150.ms)
                 .slideY(begin: -0.1, end: 0, duration: 300.ms, delay: 150.ms),
             const SizedBox(height: 12),
-            if (_steps.isNotEmpty)
-              ...List.generate(_steps.length, (index) {
-                return _buildStepChip(context, _steps[index], index)
+            if (steps.isNotEmpty)
+              ...List.generate(steps.length, (index) {
+                return buildStepChip(context, steps[index], index)
                     .animate()
                     .fadeIn(duration: 200.ms, delay: (index * 30).ms)
                     .slideX(begin: -0.1, end: 0, duration: 200.ms, delay: (index * 30).ms);
@@ -307,9 +304,9 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
 
             // Save Button
             ElevatedButton.icon(
-              onPressed: _saveRecipe,
+              onPressed: saveRecipe,
               icon: const Icon(Icons.save_alt_rounded),
-              label: Text(_isEditing ? 'Update Recipe' : 'Create Recipe'),
+              label: Text(isEditing ? 'Update Recipe' : 'Create Recipe'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 minimumSize: const Size(double.infinity, 56),
@@ -324,7 +321,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
     );
   }
 
-  Widget _buildSectionHeader(
+  Widget buildSectionHeader(
     BuildContext context,
     String title,
     IconData icon,
@@ -352,7 +349,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
     );
   }
 
-  Widget _buildIngredientChip(BuildContext context, String ingredient, int index) {
+  Widget buildIngredientChip(BuildContext context, String ingredient, int index) {
     final colorScheme = Theme.of(context).colorScheme;
     
     return Container(
@@ -362,7 +359,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () => _removeIngredient(index),
+          onTap: () => removeIngredient(index),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
@@ -411,7 +408,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
     );
   }
 
-  Widget _buildStepChip(BuildContext context, String step, int index) {
+  Widget buildStepChip(BuildContext context, String step, int index) {
     final colorScheme = Theme.of(context).colorScheme;
     
     return Container(
@@ -421,7 +418,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () => _removeStep(index),
+          onTap: () => removeStep(index),
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(

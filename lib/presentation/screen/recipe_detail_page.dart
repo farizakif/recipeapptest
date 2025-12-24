@@ -17,22 +17,22 @@ class RecipeDetailPage extends StatefulWidget {
 
 class _RecipeDetailPageState extends State<RecipeDetailPage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  bool _isBookmarked = false;
+  late TabController tabController;
+  bool isBookmarked = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    tabController.dispose();
     super.dispose();
   }
 
-  Future<void> _confirmDelete(BuildContext context) async {
+  Future<void> confirmDelete(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -74,12 +74,12 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
         actions: [
           IconButton(
             icon: Icon(
-              _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+              isBookmarked ? Icons.bookmark : Icons.bookmark_border,
               color: Colors.white,
             ),
             onPressed: () {
               setState(() {
-                _isBookmarked = !_isBookmarked;
+                isBookmarked = !isBookmarked;
               });
             },
           ),
@@ -117,7 +117,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                     Text('Delete', style: TextStyle(color: Colors.red)),
                   ],
                 ),
-                onTap: () => _confirmDelete(context),
+                onTap: () => confirmDelete(context),
               ),
             ],
           ),
@@ -126,7 +126,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
       body: SingleChildScrollView(
         child: Column(
           children: [
-          // Recipe Image Header
           Container(
             height: 250,
             width: double.infinity,
@@ -165,7 +164,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                   ),
           ),
           
-          // Recipe Info Card
+          // Info Card
           Transform.translate(
             offset: const Offset(0, -30),
             child: Container(
@@ -207,21 +206,21 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                   // Stats
                   Row(
                     children: [
-                      _buildStatItem(
+                      buildStatItem(
                         context,
                         Icons.access_time,
                         '10 Min',
                         colorScheme,
                       ),
                       const SizedBox(width: 16),
-                      _buildStatItem(
+                      buildStatItem(
                         context,
                         Icons.trending_up,
                         'Medium',
                         colorScheme,
                       ),
                       const SizedBox(width: 16),
-                      _buildStatItem(
+                      buildStatItem(
                         context,
                         Icons.local_fire_department,
                         '223 Cal',
@@ -292,7 +291,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TabBar(
-              controller: _tabController,
+              controller: tabController,
               labelColor: colorScheme.primary,
               unselectedLabelColor: Colors.grey[600],
               indicatorColor: colorScheme.primary,
@@ -307,10 +306,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
           SizedBox(
             height: 400,
             child: TabBarView(
-              controller: _tabController,
+              controller: tabController,
               children: [
-                _buildIngredientsTab(context, colorScheme),
-                _buildInstructionsTab(context, colorScheme),
+                buildIngredientsTab(context, colorScheme),
+                buildInstructionsTab(context, colorScheme),
               ],
             ),
           ),
@@ -320,7 +319,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
     );
   }
 
-  Widget _buildStatItem(
+  Widget buildStatItem(
     BuildContext context,
     IconData icon,
     String text,
@@ -340,7 +339,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
     );
   }
 
-  Widget _buildIngredientsTab(BuildContext context, ColorScheme colorScheme) {
+  Widget buildIngredientsTab(BuildContext context, ColorScheme colorScheme) {
     return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: widget.recipe.ingredients.length,
@@ -376,7 +375,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
     );
   }
 
-  Widget _buildInstructionsTab(BuildContext context, ColorScheme colorScheme) {
+  Widget buildInstructionsTab(BuildContext context, ColorScheme colorScheme) {
     return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: widget.recipe.steps.length,
