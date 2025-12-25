@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:convert';
 import '../../data/models/recipe.dart';
 
 class RecipeCard extends StatelessWidget {
@@ -31,17 +32,17 @@ class RecipeCard extends StatelessWidget {
               flex: 3,
               child: Stack(
                 children: [
-                  recipe.imagePath.isNotEmpty
-                      ? Image.asset(
-                          'assets/${recipe.imagePath}',
+                  recipe.imageBase64 != null && recipe.imageBase64!.isNotEmpty
+                      ? Image.memory(
+                          base64Decode(recipe.imageBase64!),
                           width: double.infinity,
                           height: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return buildGradientPlaceholder(colorScheme);
+                            return buildFallbackImage(context, colorScheme, recipe);
                           },
                         )
-                      : buildGradientPlaceholder(colorScheme),
+                      : buildFallbackImage(context, colorScheme, recipe),
                   Positioned(
                     top: 12,
                     right: 12,
@@ -136,6 +137,21 @@ class RecipeCard extends StatelessWidget {
         .animate()
         .fadeIn(duration: 300.ms, delay: (index * 50).ms)
         .slideY(begin: 0.1, end: 0, duration: 300.ms, delay: (index * 50).ms);
+  }
+
+  Widget buildFallbackImage(BuildContext context, ColorScheme colorScheme, Recipe recipe) {
+    if (recipe.imagePath.isNotEmpty) {
+      return Image.asset(
+        'assets/${recipe.imagePath}',
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return buildGradientPlaceholder(colorScheme);
+        },
+      );
+    }
+    return buildGradientPlaceholder(colorScheme);
   }
 
   Widget buildInfoChip(

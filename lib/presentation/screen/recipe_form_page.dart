@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
+import 'dart:io';
 import '../../bloc/recipe/recipe_bloc.dart';
 import '../../bloc/recipe/recipe_event.dart';
 import '../../data/models/recipe.dart';
@@ -24,6 +27,9 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
   String? selectedType;
   List<String> ingredients = [];
   List<String> steps = [];
+  String? imageBase64;
+  File? pickedImageFile;
+  final ImagePicker _imagePicker = ImagePicker();
 
   bool get isEditing => widget.recipe != null;
 
@@ -36,6 +42,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
       selectedType = widget.recipe!.recipeType;
       ingredients = List.from(widget.recipe!.ingredients);
       steps = List.from(widget.recipe!.steps);
+      imageBase64 = widget.recipe!.imageBase64;
     }
   }
 
@@ -45,6 +52,31 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
     ingredientController.dispose();
     stepController.dispose();
     super.dispose();
+  }
+
+  Future<void> pickImage() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        final bytes = await File(image.path).readAsBytes();
+        setState(() {
+          pickedImageFile = File(image.path);
+          imageBase64 = base64Encode(bytes);
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick image: $e')),
+        );
+      }
+    }
   }
 
   void addIngredient() {
@@ -98,6 +130,7 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
         title: titleController.text.trim(),
         recipeType: selectedType!,
         imagePath: '',
+        imageBase64: imageBase64,
         ingredients: ingredients,
         steps: steps,
       );
@@ -156,6 +189,96 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            GestureDetector(
+              onTap: pickImage,
+              child: Container(
+                height: 250,
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: colorScheme.outline.withOpacity(0.2),
+                    width: 2,
+                  ),
+                ),
+                child: pickedImageFile != null || imageBase64 != null
+                    ? Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: pickedImageFile != null
+                                ? Image.file(
+                                    pickedImageFile!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  )
+                                : Image.memory(
+                                    base64Decode(imageBase64!),
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                          ),
+                          Positioned(
+                            top: 12,
+                            right: 12,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.6),
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    pickedImageFile = null;
+                                    imageBase64 = null;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.image_not_supported_outlined,
+                              size: 64,
+                              color: colorScheme.primary.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Tap to add recipe image',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: colorScheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Choose a delicious photo',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+            )
+                .animate()
+                .fadeIn(duration: 300.ms)
+                .slideY(begin: -0.1, end: 0, duration: 300.ms),
+            const SizedBox(height: 24),
+
             TextFormField(
               controller: titleController,
               decoration: InputDecoration(
@@ -188,7 +311,6 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
                 .slideY(begin: -0.1, end: 0, duration: 300.ms, delay: 50.ms),
             const SizedBox(height: 32),
 
-            // Ingredients Section
             buildSectionHeader(
               context,
               'Ingredients',
@@ -245,7 +367,6 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
               }),
             const SizedBox(height: 32),
 
-            // Steps Section
             buildSectionHeader(
               context,'Instructions',
               Icons.format_list_numbered,
@@ -302,7 +423,6 @@ class _RecipeFormPageState extends State<RecipeFormPage> {
               }),
             const SizedBox(height: 32),
 
-            // Save Button
             ElevatedButton.icon(
               onPressed: saveRecipe,
               icon: const Icon(Icons.save_alt_rounded),

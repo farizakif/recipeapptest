@@ -21,9 +21,20 @@ class SQLiteHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      try {
+        await db.execute('ALTER TABLE recipes ADD COLUMN imageBase64 TEXT');
+      } catch (e) {
+        // Column might already exist
+      }
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -33,6 +44,7 @@ class SQLiteHelper {
         title TEXT NOT NULL,
         recipeType TEXT NOT NULL,
         imagePath TEXT NOT NULL,
+        imageBase64 TEXT,
         ingredients TEXT NOT NULL,
         steps TEXT NOT NULL
       )

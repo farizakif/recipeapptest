@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:expandable/expandable.dart';
+import 'dart:convert';
 import '../../bloc/recipe/recipe_bloc.dart';
 import '../../bloc/recipe/recipe_event.dart';
 import '../../data/models/recipe.dart';
@@ -139,32 +140,29 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                 ],
               ),
             ),
-            child: widget.recipe.imagePath.isNotEmpty
-                ? Image.asset(
-                    'assets/${widget.recipe.imagePath}',
+            child: widget.recipe.imageBase64 != null && widget.recipe.imageBase64!.isNotEmpty
+                ? Image.memory(
+                    base64Decode(widget.recipe.imageBase64!),
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
-                      return Center(
-                        child: Icon(
-                          Icons.restaurant_menu,
-                          size: 120,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                      );
+                      return buildImageFallback();
                     },
                   )
-                : Center(
-                    child: Icon(
-                      Icons.restaurant_menu,
-                      size: 120,
-                      color: Colors.white.withOpacity(0.9),
-                    ),
-                  ),
+                : widget.recipe.imagePath.isNotEmpty
+                    ? Image.asset(
+                        'assets/${widget.recipe.imagePath}',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return buildImageFallback();
+                        },
+                      )
+                    : buildImageFallback(),
           ),
           
-          // Info Card
           Transform.translate(
             offset: const Offset(0, -30),
             child: Container(
@@ -287,7 +285,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
             ),
           ),
           
-          // Tabs
           Container(
             margin: const EdgeInsets.only(top: 10),
             child: TabBar(
@@ -459,6 +456,16 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
           ),
         );
       },
+    );
+  }
+
+  Widget buildImageFallback() {
+    return Center(
+      child: Icon(
+        Icons.restaurant_menu,
+        size: 120,
+        color: Colors.white.withOpacity(0.9),
+      ),
     );
   }
 }

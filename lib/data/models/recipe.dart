@@ -6,6 +6,7 @@ class Recipe extends Equatable {
   final String title;
   final String recipeType;
   final String imagePath;
+  final String? imageBase64;
   final List<String> ingredients;
   final List<String> steps;
 
@@ -14,6 +15,7 @@ class Recipe extends Equatable {
     required this.title,
     required this.recipeType,
     required this.imagePath,
+    this.imageBase64,
     required this.ingredients,
     required this.steps,
   });
@@ -24,6 +26,7 @@ class Recipe extends Equatable {
       title: json['title'] as String,
       recipeType: json['recipeType'] as String,
       imagePath: json['imagePath'] as String,
+      imageBase64: json['imageBase64'] as String?,
       ingredients: List<String>.from(jsonDecode(json['ingredients'] as String) as List,),
       steps: List<String>.from(jsonDecode(json['steps'] as String) as List,),
     );
@@ -35,6 +38,7 @@ class Recipe extends Equatable {
       'title': title,
       'recipeType': recipeType,
       'imagePath': imagePath,
+      'imageBase64': imageBase64,
       'ingredients': jsonEncode(ingredients),
       'steps': jsonEncode(steps),
     };
@@ -45,6 +49,7 @@ class Recipe extends Equatable {
     String? title,
     String? recipeType,
     String? imagePath,
+    String? imageBase64,
     List<String>? ingredients,
     List<String>? steps,
   }) {
@@ -53,11 +58,12 @@ class Recipe extends Equatable {
       title: title ?? this.title,
       recipeType: recipeType ?? this.recipeType,
       imagePath: imagePath ?? this.imagePath,
+      imageBase64: imageBase64 ?? this.imageBase64,
       ingredients: ingredients ?? this.ingredients,
       steps: steps ?? this.steps,
     );
   }
 
   @override
-  List<Object?> get props => [id, title, recipeType, imagePath, ingredients, steps];
+  List<Object?> get props => [id, title, recipeType, imagePath, imageBase64, ingredients, steps];
 }
