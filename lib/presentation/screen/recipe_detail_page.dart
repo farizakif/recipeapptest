@@ -38,7 +38,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Recipe'),
-        content: Text('Are you sure you want to delete "${widget.recipe.title}"?'),
+        content: Text(
+          'Are you sure you want to delete "${widget.recipe.title}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -62,7 +64,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
@@ -101,7 +103,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                     final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RecipeFormPage(recipe: widget.recipe),
+                        builder: (context) =>
+                            RecipeFormPage(recipe: widget.recipe),
                       ),
                     );
                     if (result == true && context.mounted) {
@@ -127,190 +130,181 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
       body: SingleChildScrollView(
         child: Column(
           children: [
-          Container(
-            height: 250,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primary,
-                  colorScheme.secondary,
-                ],
-              ),
-            ),
-            child: widget.recipe.imageBase64 != null && widget.recipe.imageBase64!.isNotEmpty
-                ? Image.memory(
-                    base64Decode(widget.recipe.imageBase64!),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
-                      return buildImageFallback();
-                    },
-                  )
-                : widget.recipe.imagePath.isNotEmpty
-                    ? Image.asset(
-                        'assets/${widget.recipe.imagePath}',
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return buildImageFallback();
-                        },
-                      )
-                    : buildImageFallback(),
-          ),
-          
-          Transform.translate(
-            offset: const Offset(0, -30),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(20),
+            Container(
+              height: 250,
+              width: double.infinity,
               decoration: BoxDecoration(
-                color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: 25,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [colorScheme.primary, colorScheme.secondary],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  Text(
-                    widget.recipe.title,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+              child:
+                  widget.recipe.imageBase64 != null &&
+                      widget.recipe.imageBase64!.isNotEmpty
+                  ? Image.memory(
+                      base64Decode(widget.recipe.imageBase64!),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return buildImageFallback();
+                      },
+                    )
+                  : widget.recipe.imagePath.isNotEmpty
+                  ? Image.asset(
+                      'assets/${widget.recipe.imagePath}',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return buildImageFallback();
+                      },
+                    )
+                  : buildImageFallback(),
+            ),
+
+            Transform.translate(
+              offset: const Offset(0, -30),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 25,
+                      offset: const Offset(0, 8),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  
-                  // Description
-                  Text(
-                    'A delicious recipe filled with amazing flavors and ingredients that will delight your taste buds.',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                      height: 1.5,
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.recipe.title,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  // Stats
-                  Row(
-                    children: [
-                      buildStatItem(
-                        context,
-                        Icons.access_time,
-                        '10 Min',
-                        colorScheme,
+                    const SizedBox(height: 12),
+
+                    Text(
+                      'A delicious recipe filled with amazing flavors and ingredients that will delight your taste buds.',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
+                        height: 1.5,
                       ),
-                      const SizedBox(width: 16),
-                      buildStatItem(
-                        context,
-                        Icons.trending_up,
-                        'Medium',
-                        colorScheme,
-                      ),
-                      const SizedBox(width: 16),
-                      buildStatItem(
-                        context,
-                        Icons.local_fire_department,
-                        '223 Cal',
-                        colorScheme,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  // Chef Info
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              colorScheme.primary,
-                              colorScheme.secondary,
+                    ),
+                    const SizedBox(height: 20),
+
+                    Row(
+                      children: [
+                        buildStatItem(
+                          context,
+                          Icons.access_time,
+                          '10 Min',
+                          colorScheme,
+                        ),
+                        const SizedBox(width: 16),
+                        buildStatItem(
+                          context,
+                          Icons.trending_up,
+                          'Medium',
+                          colorScheme,
+                        ),
+                        const SizedBox(width: 16),
+                        buildStatItem(
+                          context,
+                          Icons.local_fire_department,
+                          '223 Cal',
+                          colorScheme,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+
+                    Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                colorScheme.primary,
+                                colorScheme.secondary,
+                              ],
+                            ),
+                          ),
+                          child: const Icon(Icons.person, color: Colors.white),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'K. Aming',
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Professional Chef',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey[600]),
+                              ),
                             ],
                           ),
                         ),
-                        child: const Icon(Icons.person, color: Colors.white),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Emma Brown',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                        OutlinedButton(
+                          onPressed: () {},
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: colorScheme.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            Text(
-                              'Professional Chef',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: colorScheme.primary),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '+ Follow',
+                            style: TextStyle(color: colorScheme.primary),
                           ),
                         ),
-                        child: Text(
-                          '+ Follow',
-                          style: TextStyle(color: colorScheme.primary),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: TabBar(
+                controller: tabController,
+                labelColor: colorScheme.primary,
+                unselectedLabelColor: Colors.grey[600],
+                indicatorColor: colorScheme.primary,
+                tabs: const [
+                  Tab(text: 'Ingredients'),
+                  Tab(text: 'Instructions'),
                 ],
               ),
             ),
-          ),
-          
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            child: TabBar(
-              controller: tabController,
-              labelColor: colorScheme.primary,
-              unselectedLabelColor: Colors.grey[600],
-              indicatorColor: colorScheme.primary,
-              tabs: const [
-                Tab(text: 'Ingredients'),
-                Tab(text: 'Instructions'),
-              ],
+
+            SizedBox(
+              height: 400,
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  buildIngredientsTab(context, colorScheme),
+                  buildInstructionsTab(context, colorScheme),
+                ],
+              ),
             ),
-          ),
-          
-          // Tab Content
-          SizedBox(
-            height: 400,
-            child: TabBarView(
-              controller: tabController,
-              children: [
-                buildIngredientsTab(context, colorScheme),
-                buildInstructionsTab(context, colorScheme),
-              ],
-            ),
-          ),
-        ],
+          ],
         ),
       ),
     );
@@ -328,9 +322,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
         const SizedBox(width: 6),
         Text(
           text,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -400,10 +394,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                       height: 36,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [
-                            colorScheme.primary,
-                            colorScheme.secondary,
-                          ],
+                          colors: [colorScheme.primary, colorScheme.secondary],
                         ),
                         shape: BoxShape.circle,
                       ),
@@ -422,9 +413,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                     Expanded(
                       child: Text(
                         'Step ${index + 1}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -445,9 +435,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage>
                   children: [
                     Text(
                       widget.recipe.steps[index],
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        height: 1.6,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(height: 1.6),
                     ),
                   ],
                 ),

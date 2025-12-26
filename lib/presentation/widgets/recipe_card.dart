@@ -97,7 +97,7 @@ class RecipeCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          'By: Chef Emma Brown',
+                          'By: Chef K. Aming',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.grey[600],
                             fontSize: 11,

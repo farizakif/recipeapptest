@@ -7,6 +7,7 @@ import '../../bloc/recipe/recipe_state.dart';
 import '../widgets/recipe_card.dart';
 import 'recipe_detail_page.dart';
 import 'recipe_form_page.dart';
+import '../../core/utils/json_helper.dart';
 
 class RecipeListPage extends StatefulWidget {
   const RecipeListPage({super.key});
@@ -71,6 +72,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   buildHeader(context, colorScheme),
                   buildGreetingSection(context, colorScheme),
                   buildSearchBar(context, colorScheme),
+                  buildFilterDropdown(context, colorScheme),
                   buildCategories(context, colorScheme),
                   buildSectionHeader(context,'${state.recipes.length} Recommendations','See More >',
                     colorScheme,
@@ -163,7 +165,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Abigail Raychielle',
+                  'Fariz Akif',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -224,15 +226,35 @@ class _RecipeListPageState extends State<RecipeListPage> {
   }
 
   Widget buildCategories(BuildContext context, ColorScheme colorScheme) {
-    final categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks', 'Drinks'];
+    final categories = [
+      'All',
+      'Breakfast',
+      'Lunch',
+      'Dinner',
+      'Dessert',
+      'Snack',
+      'Appetizer',
+      'Soup',
+      'Salad',
+      'Beverage',
+      'Vegetarian',
+      'Vegan',
+      'Gluten-Free',
+    ];
     final categoryIcons = {
       'All': Icons.grid_view,
       'Breakfast': Icons.free_breakfast,
       'Lunch': Icons.lunch_dining,
       'Dinner': Icons.dinner_dining,
       'Dessert': Icons.cake,
-      'Snacks': Icons.fastfood,
-      'Drinks': Icons.local_cafe,
+      'Snack': Icons.fastfood,
+      'Appetizer': Icons.local_dining,
+      'Soup': Icons.soup_kitchen,
+      'Salad': Icons.grass,
+      'Beverage': Icons.local_cafe,
+      'Vegetarian': Icons.eco,
+      'Vegan': Icons.spa,
+      'Gluten-Free': Icons.health_and_safety,
     };
 
     return SizedBox(
@@ -280,6 +302,39 @@ class _RecipeListPageState extends State<RecipeListPage> {
                 ],
               ),
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildFilterDropdown(BuildContext context, ColorScheme colorScheme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: FutureBuilder<List<String>>(
+        future: JsonHelper.loadRecipeTypes(),
+        builder: (context, snapshot) {
+          final rawTypes = snapshot.data ?? [];
+          final uniqueTypes = rawTypes.toSet().toList();
+          final items = ['All', ...uniqueTypes];
+          final safeValue = items.contains(selectedCategory) ? selectedCategory : 'All';
+          return DropdownButtonFormField<String>(
+            value: safeValue,
+            decoration: InputDecoration(
+              labelText: 'Filter by type',
+              prefixIcon: Icon(Icons.category, color: colorScheme.primary),
+            ),
+            items: items.map((type) {
+              return DropdownMenuItem<String>(
+                value: type,
+                child: Text(type),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null) {
+                _filterRecipes(value);
+              }
+            },
           );
         },
       ),

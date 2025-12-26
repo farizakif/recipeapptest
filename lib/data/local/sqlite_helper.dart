@@ -31,9 +31,7 @@ class SQLiteHelper {
     if (oldVersion < 2) {
       try {
         await db.execute('ALTER TABLE recipes ADD COLUMN imageBase64 TEXT');
-      } catch (e) {
-        // Column might already exist
-      }
+      } catch (e) {}
     }
   }
 
@@ -58,7 +56,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Classic Pancakes',
         recipeType: 'Breakfast',
-        imagePath: 'assets/pancakes.avif',
+        imagePath: 'assets/pancake.avif',
         ingredients: [
           '2 cups all-purpose flour',
           '2 tablespoons sugar',
@@ -80,7 +78,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Caesar Salad',
         recipeType: 'Lunch',
-        imagePath: 'assets/caesar.png',
+        imagePath: 'assets/caesar_salad.avif',
         ingredients: [
           '1 head romaine lettuce',
           '1/2 cup Caesar dressing',
@@ -123,7 +121,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Chocolate Chip Cookies',
         recipeType: 'Dessert',
-        imagePath: 'assets/cookies.avif',
+        imagePath: 'cookies.avif',
         ingredients: [
           '2 cups flour',
           '1 tsp baking soda',
@@ -149,7 +147,7 @@ class SQLiteHelper {
       Recipe(
         title: 'Veggie Stir Fry',
         recipeType: 'Vegetarian',
-        imagePath: 'assets/veggie.png',
+        imagePath: 'assets/veggie.jpg',
         ingredients: [
           '2 cups mixed vegetables',
           '2 tablespoons soy sauce',
@@ -196,11 +194,7 @@ class SQLiteHelper {
 
   Future<int> deleteRecipe(int id) async {
     final db = await database;
-    return await db.delete(
-      'recipes',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('recipes', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<List<Recipe>> getRecipesByType(String type) async {
